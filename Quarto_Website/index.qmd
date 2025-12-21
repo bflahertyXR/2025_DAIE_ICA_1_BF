@@ -1,71 +1,29 @@
 ---
 title: "Data Analytics for Immersive Environments"
 ---
+
 # Welcome
 
 This Quarto website displays the first part of my individual project for **Data Analytics for Immersive Environments**
 
 It Includes:
 
-  - **Part A:** SQL Queries and Database Exploration
-  - **Part B:** Linear Regression Analysis and Visualisation
-  - **Part C:** Technology Exploration of new R Packages
-  
+-   **Part A:** SQL Queries and Database Exploration
+-   **Part B:** Linear Regression Analysis and Visualisation
+-   **Part C:** Technology Exploration of new R Packages
+
 Each section can be accessed through the navigation bar at the top of the page
 
-```{r}
-#| message: true
-#| warning: true
+:::::: {#container}
+::: linksContainer
+<a link="/partA_SQL">SQL</a>
+:::
 
-# Install packages, load libraries
-if(!require("tidyverse"))
-  install.packages("tidyverse")
-  library(tidyverse)
+::: linksContainer
+Linear Regession
+:::
 
-if(!require("DBI"))
-  install.packages("DBI")
-  library(DBI)
-
-if(!require("RSQLite"))
-  install.packages("RSQLite")
-  library(RSQLite)
-
-if(!require("kableExtra"))
-  install.packages("kableExtra")
-  library(kableExtra)
-
-if(!require("DT"))
-  install.packages("DT")
-  library(DT)
-
-# Connect to database
-conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
-
-# Display database tables
-dbListTables(conn)
-```
-
-```{r}
-#| message: true
-#| warning: true
-
-# Takes the country field from Clients table & counts how many productions exist for each country and adds all budgets of productions of clients in the country
-# Sets Productions as main table that we are pulling data from and assign it the value "p"
-# Connect the two tables
-# Group by country
-# Order by total budget in descending order
-
-part1 <- "SELECT c.Country, COUNT(p.ProductionID) AS ProjectCount, SUM(p.Budget) AS TotalBudget FROM Productions p JOIN Clients c ON p.ClientID = c.ClientID GROUP BY c.Country ORDER BY TotalBudget DESC;"
-
-# Queries the database and runs part1
-result1 <- dbGetQuery(conn, part1)
-
-# Adds results to a table
-head(result1)
-
-# Display Table with results
-kable(result1, caption = 'Total Budget and Project Count per Country') %>% kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover"))
-
-```
-
-
+::: linksContainer
+Technology Exploration
+:::
+::::::

@@ -7,17 +7,17 @@ website:
     left:
       - text: "Home" 
         href: index.qmd
-      - text: "Part A - SQL" 
+      - text: "SQL" 
         href: partA_SQL.qmd
-      - text: "Part B - Linear Regression" 
-        href: partA_Regression.qmd
-      - text: "Part D - Technology Exploration" 
+      - text: "Linear Regression" 
+        href: partB_Regression.qmd
+      - text: "Technology Exploration" 
         href: partD_TechExploration.qmd
 
 format:
   html:
     theme:
-      - cosmo
+      - flatly
       - brand
     css: styles.css
     toc: true
