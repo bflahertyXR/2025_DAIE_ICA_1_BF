@@ -1,8 +1,9 @@
 ---
 title: "SQL Queries and Database Exploration"
+format: html
 ---
 
-```{r}
+```{r setup}
 #| message: true
 #| warning: true
 
@@ -54,5 +55,51 @@ head(result1)
 
 # Display Table with results
 kable(result1, caption = 'Total Budget and Project Count per Country') %>% kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover"))
+
+```
+
+```{r}
+#| message: true
+#| warning: true
+
+# Takes the country field from Clients table & counts how many productions exist for each country and adds all budgets of productions of clients in the country
+# Sets Productions as main table that we are pulling data from and assign it the value "p"
+# Connect the two tables
+# Group by country
+# Order by total budget in descending order
+
+part2 <- "SELECT c.Country, COUNT(p.ProductionID) AS ProjectCount, SUM(p.Budget) AS TotalBudget FROM Productions p JOIN Clients c ON p.ClientID = c.ClientID GROUP BY c.Country ORDER BY TotalBudget DESC;"
+
+# Queries the database and runs part1
+result2 <- dbGetQuery(conn, part2)
+
+# Adds results to a table
+head(result2)
+
+# Display Table with results
+kable(result2, caption = 'Total Budget and Project Count per Country') %>% kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover"))
+
+```
+
+```{r}
+#| message: true
+#| warning: true
+
+# Takes the country field from Clients table & counts how many productions exist for each country and adds all budgets of productions of clients in the country
+# Sets Productions as main table that we are pulling data from and assign it the value "p"
+# Connect the two tables
+# Group by country
+# Order by total budget in descending order
+
+part3 <- "SELECT c.Country, COUNT(p.ProductionID) AS ProjectCount, SUM(p.Budget) AS TotalBudget FROM Productions p JOIN Clients c ON p.ClientID = c.ClientID GROUP BY c.Country ORDER BY TotalBudget DESC;"
+
+# Queries the database and runs part1
+result3 <- dbGetQuery(conn, part3)
+
+# Adds results to a table
+head(result3)
+
+# Display Table with results
+kable(result3, caption = 'Total Budget and Project Count per Country') %>% kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover"))
 
 ```
