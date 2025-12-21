@@ -68,7 +68,7 @@ kable(result1, caption = 'Total Budget and Project Count per Country') %>% kable
 # Group by country
 # Order by total budget in descending order
 
-part2 <- "SELECT c.Country, COUNT(p.ProductionID) AS ProjectCount, SUM(p.Budget) AS TotalBudget FROM Productions p JOIN Clients c ON p.ClientID = c.ClientID GROUP BY c.Country ORDER BY TotalBudget DESC;"
+part2 <- "e.ProductionID"
 
 # Queries the database and runs part1
 result2 <- dbGetQuery(conn, part2)

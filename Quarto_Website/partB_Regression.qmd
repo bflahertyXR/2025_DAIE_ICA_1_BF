@@ -59,7 +59,29 @@ data1 <- dbGetQuery(conn, part1)
 # Adds results to a table
 head(data1)
 
-# Display Table with results
-kable(result1, caption = 'Total Budget and Project Count per Country') %>% kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover"))
+```
+
+```{r}
+#| message: true
+#| warning: true
+#| paged-print: true
+
+# Predict SuccessRate based on Budget & Crewsize using a linear model
+model <- lm(SuccessRate ~ Budget + CrewSize, data = data)
+summary(model)
+
+# Plot results of SuccessRate to a scatterplt chart
+ggplot(data, aes(x = Budget, y = SuccessRate)) + geom_point(aes(size = CrewSize, color = CrewSize)) + geom_smooth(method = "lm", se = FALSE, color = "blue") + labs(title = "Budget vs Success Rate", x = "Budget (Currency Units", y = "Success Rate", caption = "Linear trend line with Crew Size indicated by color") + theme_minimal()
+
+```
+
+```{r}
+#| message: true
+#| warning: true
+#| paged-print: true
+
+# Extract coeffecients and display in a table
+model_tidy <-tidy(model)
+kable(model_tidy, caption = "Linear Regression Coefficients") %>% kable_styling(full_width = FALSE)
 
 ```
