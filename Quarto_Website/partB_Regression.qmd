@@ -4,6 +4,7 @@ format: html
 ---
 
 ```{r}
+#| label: Install and Load Libraries
 #| message: true
 #| warning: true
 
@@ -46,6 +47,7 @@ conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
 ```
 
 ```{r}
+#| label: Part 1 DB Query
 #| message: true
 #| warning: true
 
@@ -59,15 +61,8 @@ data1 <- dbGetQuery(conn, part1)
 # Adds results to a table
 head(data1)
 
-```
-
-```{r}
-#| message: true
-#| warning: true
-#| paged-print: true
-
 # Predict SuccessRate based on Budget & Crewsize using a linear model
-model <- lm(SuccessRate ~ Budget + CrewSize, data = data)
+model <- lm(SuccessRate ~ Budget + CrewSize, data1 = data1)
 summary(model)
 
 # Plot results of SuccessRate to a scatterplt chart
@@ -76,6 +71,7 @@ ggplot(data, aes(x = Budget, y = SuccessRate)) + geom_point(aes(size = CrewSize,
 ```
 
 ```{r}
+#| label: Extract Coefficents
 #| message: true
 #| warning: true
 #| paged-print: true
