@@ -3,7 +3,8 @@ title: "SQL Queries and Database Exploration"
 format: html
 ---
 
-```{r setup}
+```{r}
+#| label: Libraries and DB Connection
 #| message: true
 #| warning: true
 
@@ -36,8 +37,10 @@ dbListTables(conn)
 ```
 
 ```{r}
+#| label: Part 1
 #| message: true
 #| warning: true
+#| paged-print: true
 
 # Takes the country field from Clients table & counts how many productions exist for each country and adds all budgets of productions of clients in the country
 # Sets Productions as main table that we are pulling data from and assign it the value "p"
@@ -59,8 +62,10 @@ kable(result1, caption = 'Total Budget and Project Count per Country') %>% kable
 ```
 
 ```{r}
+#| label: Part 2
 #| message: true
 #| warning: true
+#| paged-print: true
 
 # Takes the country field from Clients table & counts how many productions exist for each country and adds all budgets of productions of clients in the country
 # Sets Productions as main table that we are pulling data from and assign it the value "p"
@@ -80,8 +85,10 @@ datatable(result2, caption = "Average Development Time by Number of Assets", opt
 ```
 
 ```{r}
+#| label: Part 3
 #| message: true
 #| warning: true
+#| paged-print: true
 
 # Takes the country field from Clients table & counts how many productions exist for each country and adds all budgets of productions of clients in the country
 # Sets Productions as main table that we are pulling data from and assign it the value "p"
@@ -98,4 +105,56 @@ result3 <- dbGetQuery(conn, part3)
 # Display Table with results
 kable(result3, caption = "Top Three Crew Members by Successful Productions") %>% kable_styling(full_width = FALSE, position = 'center', bootstrap_options = c('striped', 'hover'))
 
+```
+
+# General SQL Concepts Demonstration
+
+### SQL Concept 1 Demonstration
+
+```{r}
+#| label: SQL Concepts Part 1
+#| message: true
+#| warning: true
+#| paged-print: true
+
+sqlconcept1 <- "SELECT Clients.ClientName, Clients.Country, Productions.Title, Productions.Genre FROM Clients JOIN Productions ON Clients.ClientID = Productions.ClientID WHERE (Clients.Country LIKE '%UK%' OR Clients.Country LIKE '%Japan%') AND (Productions.Genre LIKE '%Sci-Fi%' or Productions.Genre LIKE '%Drama%') ORDER BY CLients.Country, Productions.Title;"
+
+# Queries the database and runs SQL concept demonstration 1
+result4 <- dbGetQuery(conn, sqlconcept1)
+
+# Display Table with results
+kable(result4, caption = 'Productions for Clients in UK or USA with Action or Drama Genres') %>% kable_styling(full_width = FALSE, position = 'center')
+```
+
+
+### SQL Concept 2 Demonstration
+
+```{r}
+#| label: SQL Concepts Part 2
+#| message: true
+#| warning: true
+#| paged-print: true
+
+sqlconcept2 <- "SELECT Clients.ClientName, Clients.Country, Productions.Title, Productions.Genre FROM Clients JOIN Productions ON Clients.ClientID = Productions.ClientID WHERE (Clients.Country LIKE '%UK%' OR Clients.Country LIKE '%Japan%') AND (Productions.Genre LIKE '%Sci-Fi%' or Productions.Genre LIKE '%Drama%') ORDER BY CLients.Country, Productions.Title;"
+
+# Queries the database and runs SQL concept demonstration 1
+result4 <- dbGetQuery(conn, sqlconcept2)
+
+# Display Table with results
+kable(result4, caption = 'Productions for Clients in UK or USA with Action or Drama Genres') %>% kable_styling(full_width = FALSE, position = 'center')
+```
+
+```{r}
+#| label: SQL Concepts Part 3
+#| message: true
+#| warning: true
+#| paged-print: true
+
+sqlconcept3 <- "SELECT Clients.ClientName, Clients.Country, Productions.Title, Productions.Genre FROM Clients JOIN Productions ON Clients.ClientID = Productions.ClientID WHERE (Clients.Country LIKE '%UK%' OR Clients.Country LIKE '%Japan%') AND (Productions.Genre LIKE '%Sci-Fi%' or Productions.Genre LIKE '%Drama%') ORDER BY CLients.Country, Productions.Title;"
+
+# Queries the database and runs SQL concept demonstration 1
+result4 <- dbGetQuery(conn, sqlconcept3)
+
+# Display Table with results
+kable(result4, caption = 'Productions for Clients in UK or USA with Action or Drama Genres') %>% kable_styling(full_width = FALSE, position = 'center')
 ```
