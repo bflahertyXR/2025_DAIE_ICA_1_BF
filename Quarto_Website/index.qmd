@@ -20,7 +20,7 @@ Each section can be accessed through the navigation bar at the top of the page
 :::
 
 ::: linksContainer
-Linear Regession
+Linear Regression
 :::
 
 ::: linksContainer

@@ -68,16 +68,14 @@ kable(result1, caption = 'Total Budget and Project Count per Country') %>% kable
 # Group by country
 # Order by total budget in descending order
 
-part2 <- "e.ProductionID"
+part2 <- "WITH AssetCount AS ( SELECT Environments.ProductionID, COUNT(Assets.AssetID) AS NumAssets FROM Environments JOIN Assets ON Environments.EnvironmentID = Assets.EnvironmentID GROUP BY Environments.ProductionID), ProductionTime AS ( SELECT ProductionID, JULIANDAY(EndDate) - JULIANDAY(StartDate) AS DurationDays FROM Productions ) SELECT AssetCount.NumAssets, ROUND(AVG(ProductionTime.DurationDays), 2) AS AvgDevelopmentDays FROM AssetCount JOIN ProductionTime ON AssetCount.ProductionID = ProductionTime.ProductionID GROUP BY AssetCount.NumAssets ORDER BY AssetCount.NumAssets;"
 
 # Queries the database and runs part1
 result2 <- dbGetQuery(conn, part2)
 
-# Adds results to a table
-head(result2)
 
 # Display Table with results
-kable(result2, caption = 'Total Budget and Project Count per Country') %>% kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover"))
+datatable(result2, caption = "Average Development Time by Number of Assets", options = list(pageLength = 8))
 
 ```
 

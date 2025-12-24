@@ -53,16 +53,14 @@ conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
 
 # Select information from production, title and budget, Count the unique crew members on each and assign value to production status from the Productions table and Join with ProductionCrew Table and group by ID, Title, Budget and Status
 
-part1 <- "SELECT p.ProductionID, p.Title, p.Budget, COUNT(DISTINCT pc.CrewID) AS CrewSize, p.Status, CASE WHEN p.Status = 'Completed' THEN 1 WHEN p.Status = 'Post-Production' THEN 0.75 WHEN p.Status = 'Shooting' THEN 0.5 ELSE 0.25 END AS SuccessRate FROM Productions p LEFT JOIN ProductionCrew pc ON p.ProductionID = pc.ProductionID GROUP BY p.ProductionID, p.Title, p.Budget, p.Status;"
-
 # Queries the database and runs part1
-data1 <- dbGetQuery(conn, part1)
+data <- dbGetQuery(conn, "SELECT p.productionID, p.Title, p.Budget, COUNT(DISTINCT pc.CrewID) AS CrewSize, p.Status FROM Productions p LEFT JOIN ProductionCrew pc ON p.ProductionID = pc.ProductionID GROUP BY p.ProductionID, p.Title, p.Budget, p.Status;")
 
-# Adds results to a table
-head(data1)
+data <- data %>% mutate(SuccessRate = case_when(Status == "Completed" ~ 1, Status == "Post-Production" ~ 0.75, Status == "Shooting" ~ 0.5, TRUE ~ 0.25))
+
 
 # Predict SuccessRate based on Budget & Crewsize using a linear model
-model <- lm(SuccessRate ~ Budget + CrewSize, data1 = data1)
+model <- lm(SuccessRate ~ Budget + CrewSize, data = data)
 summary(model)
 
 # Plot results of SuccessRate to a scatterplt chart
