@@ -89,15 +89,13 @@ datatable(result2, caption = "Average Development Time by Number of Assets", opt
 # Group by country
 # Order by total budget in descending order
 
-part3 <- "SELECT c.Country, COUNT(p.ProductionID) AS ProjectCount, SUM(p.Budget) AS TotalBudget FROM Productions p JOIN Clients c ON p.ClientID = c.ClientID GROUP BY c.Country ORDER BY TotalBudget DESC;"
+part3 <- "SELECT CrewMembers.Name AS CrewMember, COUNT(DISTINCT ProductionCrew.ProductionID) AS SuccessfulProductions FROM CrewMembers JOIN ProductionCrew ON CrewMembers.CrewID = ProductionCrew.CrewID JOIN Productions ON Productions.ProductionID = ProductionCrew.ProductionID Where Productions.Status = 'Completed' GROUP BY CrewMembers.Name ORDER BY SuccessfulProductions DESC LIMIT 3;"
 
 # Queries the database and runs part1
 result3 <- dbGetQuery(conn, part3)
 
-# Adds results to a table
-head(result3)
 
 # Display Table with results
-kable(result3, caption = 'Total Budget and Project Count per Country') %>% kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover"))
+kable(result3, caption = "Top Three Crew Members by Successful Productions") %>% kable_styling(full_width = FALSE, position = 'center', bootstrap_options = c('striped', 'hover'))
 
 ```
