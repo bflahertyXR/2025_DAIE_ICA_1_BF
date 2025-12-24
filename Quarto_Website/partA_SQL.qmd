@@ -7,7 +7,9 @@ format: html
 #| label: Libraries and DB Connection
 #| message: true
 #| warning: true
-
+#| include: false
+#| paged-print: true
+  
 # Install packages, load libraries
 if(!require("tidyverse"))
   install.packages("tidyverse")
@@ -32,12 +34,13 @@ if(!require("DT"))
 # Connect to database
 conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
 
-# Display database tables
-dbListTables(conn)
 ```
+
+### SQL Part 1 - Total Budget Allocation for Productions
 
 ```{r}
 #| label: Part 1
+#| echo: false
 #| message: true
 #| warning: true
 #| paged-print: true
@@ -53,16 +56,16 @@ part1 <- "SELECT c.Country, COUNT(p.ProductionID) AS ProjectCount, SUM(p.Budget)
 # Queries the database and runs part1
 result1 <- dbGetQuery(conn, part1)
 
-# Adds results to a table
-head(result1)
-
 # Display Table with results
 kable(result1, caption = 'Total Budget and Project Count per Country') %>% kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover"))
 
 ```
 
+### SQL Part 2 - Average Development Time for Productions
+
 ```{r}
 #| label: Part 2
+#| echo: false
 #| message: true
 #| warning: true
 #| paged-print: true
@@ -84,8 +87,11 @@ datatable(result2, caption = "Average Development Time by Number of Assets", opt
 
 ```
 
+### SQL Part 3 - Top Three Crew Members
+
 ```{r}
 #| label: Part 3
+#| echo: false
 #| message: true
 #| warning: true
 #| paged-print: true
@@ -113,10 +119,14 @@ kable(result3, caption = "Top Three Crew Members by Successful Productions") %>%
 
 ```{r}
 #| label: SQL Concepts Part 1
+#| echo: false
 #| message: true
 #| warning: true
 #| paged-print: true
 
+# Links Productions and Clients and selects Client Name, Country, Production Title and Genre
+# Finds countries that are tagged UK or Japan and Genres Sci-fi or Drama
+# Sorts by Country and production title
 sqlconcept1 <- "SELECT Clients.ClientName, Clients.Country, Productions.Title, Productions.Genre FROM Clients JOIN Productions ON Clients.ClientID = Productions.ClientID WHERE (Clients.Country LIKE '%UK%' OR Clients.Country LIKE '%Japan%') AND (Productions.Genre LIKE '%Sci-Fi%' or Productions.Genre LIKE '%Drama%') ORDER BY CLients.Country, Productions.Title;"
 
 # Queries the database and runs SQL concept demonstration 1
@@ -131,30 +141,41 @@ kable(result4, caption = 'Productions for Clients in UK or USA with Action or Dr
 
 ```{r}
 #| label: SQL Concepts Part 2
+#| echo: false
 #| message: true
 #| warning: true
 #| paged-print: true
 
-sqlconcept2 <- "SELECT Clients.ClientName, Clients.Country, Productions.Title, Productions.Genre FROM Clients JOIN Productions ON Clients.ClientID = Productions.ClientID WHERE (Clients.Country LIKE '%UK%' OR Clients.Country LIKE '%Japan%') AND (Productions.Genre LIKE '%Sci-Fi%' or Productions.Genre LIKE '%Drama%') ORDER BY CLients.Country, Productions.Title;"
+# Selects Unique crew role listed only once
+# Sorts the role from A-Z (Ascending order)
+sqlconcept2 <- "SELECT DISTINCT Role FROM CrewMembers ORDER BY ROLE ASC;"
 
 # Queries the database and runs SQL concept demonstration 1
-result4 <- dbGetQuery(conn, sqlconcept2)
+result5 <- dbGetQuery(conn, sqlconcept2)
 
 # Display Table with results
-kable(result4, caption = 'Productions for Clients in UK or USA with Action or Drama Genres') %>% kable_styling(full_width = FALSE, position = 'center')
+kable(result5, caption = 'Unique Crew Roles in the Studio') %>% kable_styling(full_width = FALSE, position = 'center')
+
 ```
+
+### SQL Concept 3 Demonstration
 
 ```{r}
 #| label: SQL Concepts Part 3
+#| echo: false
 #| message: true
 #| warning: true
 #| paged-print: true
 
-sqlconcept3 <- "SELECT Clients.ClientName, Clients.Country, Productions.Title, Productions.Genre FROM Clients JOIN Productions ON Clients.ClientID = Productions.ClientID WHERE (Clients.Country LIKE '%UK%' OR Clients.Country LIKE '%Japan%') AND (Productions.Genre LIKE '%Sci-Fi%' or Productions.Genre LIKE '%Drama%') ORDER BY CLients.Country, Productions.Title;"
+# Selects Title and budget from productions and calculates average budget of all productions
+# Only productions with above average budget are selected
+#Order by descending order
+sqlconcept3 <- "SELECT Title, Budget FROM Productions WHERE Budget > (SELECT AVG(Budget) FROM Productions) ORDER BY Budget DESC;"
 
 # Queries the database and runs SQL concept demonstration 1
-result4 <- dbGetQuery(conn, sqlconcept3)
+result6 <- dbGetQuery(conn, sqlconcept3)
 
 # Display Table with results
-kable(result4, caption = 'Productions for Clients in UK or USA with Action or Drama Genres') %>% kable_styling(full_width = FALSE, position = 'center')
+datatable(result6, caption = 'Productions with the above-average Budgets', options = list(pageLength = 8))
+
 ```
