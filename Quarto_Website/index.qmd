@@ -16,14 +16,20 @@ Each section can be accessed through the navigation bar at the top of the page
 
 :::::: {#container}
 ::: linksContainer
-<a link="/partA_SQL">SQL</a>
+<a href="/partA_SQL.html">
+<button type = "button" class="btn btn-outline-light">SQL</button>
+</a>
 :::
 
 ::: linksContainer
-Linear Regression
+<a href="/partB_Regression.html">
+<button type = "button" class="btn btn-outline-light">Linear Regression</button>
+</a>
 :::
 
 ::: linksContainer
-Technology Exploration
+<a href="/partD_TechExploration.html">
+<button type = "button" class="btn btn-outline-light">Technology Exploration</button>
+</a>
 :::
 ::::::

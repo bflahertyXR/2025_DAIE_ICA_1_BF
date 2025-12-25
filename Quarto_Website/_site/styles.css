@@ -1,13 +1,19 @@
 /* css styles */
-
-.container{
+body{
+  padding: 10px;
+}
+#container{
   width: 100%;
   height: auto;
   display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
 }
 .linksContainer {
-  width: 25%;
-  height:400px;
+  width: 33%;
+  height:200px;
   border: 2px black solid;
   border-radius: 10px;
+  margin: 10px;
 }

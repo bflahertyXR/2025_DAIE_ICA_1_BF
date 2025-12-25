@@ -11,7 +11,7 @@
     "href": "index.html",
     "title": "Data Analytics for Immersive Environments",
     "section": "",
-    "text": "Welcome\nThis Quarto website displays the first part of my individual project for Data Analytics for Immersive Environments\nIt Includes:\n\nPart A: SQL Queries and Database Exploration\nPart B: Linear Regression Analysis and Visualisation\nPart C: Technology Exploration of new R Packages\n\nEach section can be accessed through the navigation bar at the top of the page\n\n\nSQL\n\n\nLinear Regression\n\n\nTechnology Exploration"
+    "text": "Welcome\nThis Quarto website displays the first part of my individual project for Data Analytics for Immersive Environments\nIt Includes:\n\nPart A: SQL Queries and Database Exploration\nPart B: Linear Regression Analysis and Visualisation\nPart C: Technology Exploration of new R Packages\n\nEach section can be accessed through the navigation bar at the top of the page\n\n\n SQL  \n\n\nLinear Regression\n\n\nTechnology Exploration"
   },
   {
     "objectID": "partA_SQL.html",

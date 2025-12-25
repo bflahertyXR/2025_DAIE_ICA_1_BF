@@ -46,27 +46,45 @@ conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
 
 ```
 
+# Linear Regression Modelling
+
 ```{r}
 #| label: Part 1 DB Query
 #| message: true
 #| warning: true
 
-# Select information from production, title and budget, Count the unique crew members on each and assign value to production status from the Productions table and Join with ProductionCrew Table and group by ID, Title, Budget and Status
+# Select information from production, title and budget, Count the unique crew members on each and assign value to production status from the Productions table and Join with Production Crew Table and group by ID, Title, Budget and Status
 
 # Queries the database and runs part1
-data <- dbGetQuery(conn, "SELECT p.productionID, p.Title, p.Budget, COUNT(DISTINCT pc.CrewID) AS CrewSize, p.Status FROM Productions p LEFT JOIN ProductionCrew pc ON p.ProductionID = pc.ProductionID GROUP BY p.ProductionID, p.Title, p.Budget, p.Status;")
+sqlquery1 <- "
+  SELECT Productions.ProductionID, Productions.Title, Productions.Budget, 
+  COUNT(DISTINCT ProductionCrew.CrewID) AS CrewSize, Productions.Status, 
+  CASE 
+    WHEN Productions.Status = 'Completed' THEN 1 
+    WHEN Productions.Status = 'In Progress' 
+    THEN 0.5 ELSE 0 END AS SuccessRate 
+  FROM Productions 
+    LEFT JOIN ProductionCrew ON Productions.ProductionID = ProductionCrew.ProductionID 
+    GROUP BY Productions.ProductionID, Productions.Title, Productions.Budget, Productions.Status 
+    ORDER BY Productions.ProductionID"
 
-data <- data %>% mutate(SuccessRate = case_when(Status == "Completed" ~ 1, Status == "Post-Production" ~ 0.75, Status == "Shooting" ~ 0.5, TRUE ~ 0.25))
 
+result1 <- dbGetQuery(conn, sqlquery1)
+head(result1)
 
 # Predict SuccessRate based on Budget & Crewsize using a linear model
-model <- lm(SuccessRate ~ Budget + CrewSize, data = data)
+model <- lm(SuccessRate ~ Budget + CrewSize, result1 = result1)
 summary(model)
 
-# Plot results of SuccessRate to a scatterplt chart
-ggplot(data, aes(x = Budget, y = SuccessRate)) + geom_point(aes(size = CrewSize, color = CrewSize)) + geom_smooth(method = "lm", se = FALSE, color = "blue") + labs(title = "Budget vs Success Rate", x = "Budget (Currency Units", y = "Success Rate", caption = "Linear trend line with Crew Size indicated by color") + theme_minimal()
+# Plot results of Budget vs Success Rate to a scatterplot chart
+ggplot(data, aes(x = Budget, y = SuccessRate, colour = CrewSize)) + geom_point(size = 3) + geom_smooth(method = "lm", se = FALSE, colour = "blue") + labs(title = "Budget vs Success Rate", x = "Budget", y = "Success Rate (0-1 scale)", colour = "Crew Size") + theme_minimal()
+
+# Plot results of Crew Size vs Success Rate to a scatterplot chart
+ggplot(data, aes(x = CrewSize, y = SuccessRate)) + geom_point(size = 3, colour = "darkred") + geom_smooth(method = "lm", se = FALSE, colour = "black") + labs(title = "Crew Size vs Success Rate", x = "Crew Size", y = "Success Rate (0-1 scale)") + theme_minimal()
 
 ```
+
+# Model Coefficients Interpretation
 
 ```{r}
 #| label: Extract Coefficents
@@ -75,7 +93,13 @@ ggplot(data, aes(x = Budget, y = SuccessRate)) + geom_point(aes(size = CrewSize,
 #| paged-print: true
 
 # Extract coeffecients and display in a table
-model_tidy <-tidy(model)
+model_tidy <- tidy(model)
 kable(model_tidy, caption = "Linear Regression Coefficients") %>% kable_styling(full_width = FALSE)
 
+# Diagnostic Plots
+par(mfrow = c(2, 2))
+plot(model)
+par(mfrow = c(1, 1))
 ```
+
+# Discussion

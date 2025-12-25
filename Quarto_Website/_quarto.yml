@@ -20,8 +20,6 @@ format:
       - flatly
       - brand
     css: styles.css
-    toc: true
-    toc-depth: 3
     number-sections: false
     code-summary: "Show Code"
     page-layout: full
