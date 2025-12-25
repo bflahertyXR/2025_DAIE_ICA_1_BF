@@ -5,8 +5,9 @@ format: html
 
 ```{r}
 #| label: Install and Load Libraries
-#| message: true
-#| warning: true
+#| message: false
+#| warning: false
+#| include: false
 
 # Install packages, load libraries
 if(!require("tidyverse"))
@@ -52,29 +53,29 @@ conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
 #| label: Part 1 DB Query
 #| message: true
 #| warning: true
+#| include: false
 
 # Select information from production, title and budget, Count the unique crew members on each and assign value to production status from the Productions table and Join with Production Crew Table and group by ID, Title, Budget and Status
 
 # Queries the database and runs part1
-sqlquery1 <- "
-  SELECT Productions.ProductionID, Productions.Title, Productions.Budget, 
-  COUNT(DISTINCT ProductionCrew.CrewID) AS CrewSize, Productions.Status, 
-  CASE 
-    WHEN Productions.Status = 'Completed' THEN 1 
-    WHEN Productions.Status = 'In Progress' 
-    THEN 0.5 ELSE 0 END AS SuccessRate 
-  FROM Productions 
-    LEFT JOIN ProductionCrew ON Productions.ProductionID = ProductionCrew.ProductionID 
-    GROUP BY Productions.ProductionID, Productions.Title, Productions.Budget, Productions.Status 
-    ORDER BY Productions.ProductionID"
+data <- dbGetQuery(conn, "SELECT p.productionID, p.Title, p.Budget, COUNT(DISTINCT pc.CrewID) AS CrewSize, p.Status FROM Productions p LEFT JOIN ProductionCrew pc ON p.ProductionID = pc.ProductionID GROUP BY p.ProductionID, p.Title, p.Budget, p.Status;")
 
-
-result1 <- dbGetQuery(conn, sqlquery1)
-head(result1)
+data <- data %>% mutate(SuccessRate = case_when(Status == "Completed" ~ 1, Status == "In Progress" ~ 0.5, TRUE ~ 0))
 
 # Predict SuccessRate based on Budget & Crewsize using a linear model
-model <- lm(SuccessRate ~ Budget + CrewSize, result1 = result1)
+model <- lm(SuccessRate ~ Budget + CrewSize, data = data)
 summary(model)
+
+```
+
+
+```{r}
+#| label: Part 1 Data Models
+#| echo: false
+#| message: true
+#| warning: true
+
+kable(data, caption = 'Summary') %>% kable_styling(full_width = FALSE, position = "center", bootstrap_options = c("striped", "hover"))
 
 # Plot results of Budget vs Success Rate to a scatterplot chart
 ggplot(data, aes(x = Budget, y = SuccessRate, colour = CrewSize)) + geom_point(size = 3) + geom_smooth(method = "lm", se = FALSE, colour = "blue") + labs(title = "Budget vs Success Rate", x = "Budget", y = "Success Rate (0-1 scale)", colour = "Crew Size") + theme_minimal()
@@ -88,6 +89,7 @@ ggplot(data, aes(x = CrewSize, y = SuccessRate)) + geom_point(size = 3, colour =
 
 ```{r}
 #| label: Extract Coefficents
+#| echo: false
 #| message: true
 #| warning: true
 #| paged-print: true
@@ -103,3 +105,4 @@ par(mfrow = c(1, 1))
 ```
 
 # Discussion
+The regression model suggests that both budget and crew size have a positive association with production success. Success Rates are influenced by the use of larger team units and higher budgets. The p-values indicate which predictors are significant.
