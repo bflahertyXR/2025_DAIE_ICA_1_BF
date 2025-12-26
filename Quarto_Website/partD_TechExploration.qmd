@@ -76,11 +76,12 @@ data <- data %>% mutate(SuccessRate = case_when(Status == "Completed" ~ 1, Statu
 ```
 
 #Interactive Visualisation with Plotly
+The Plotly library allows for interactive exploration and users can see dynamic overview of budget and Success Rate
 
 ```{r}
 
 # Queries the database and runs part1
-p <- ggplot(data, aes(x = Budget, y = SuccessRate, size = CrewSize, colour = Status, text = Title)) + geom_point(alpha = 0.7) + labs(title = "Budget vs SuccessRate (Interactive Plotly)") + theme_minimal()
+p <- ggplot(data, aes(x = Budget, y = SuccessRate, size = CrewSize, colour = Status, text = Title)) + geom_point(alpha = 0.7) + labs(title = "Budget vs Success Rate") + theme_minimal()
 
 # Queries the database and runs part1
 ggplotly(p, tooltip = c("text", "x", "y"))
@@ -88,13 +89,29 @@ ggplotly(p, tooltip = c("text", "x", "y"))
 ```
 
 #3D Rendering with Rayshader
+Rayshader is an open source package for producing 2D and 3D data visualizations in R. Rayshader allows users to translate ggplot2 objects into beautiful 3D data visualizations allowing for immersive visualisation concepts.
 
 ```{r}
 
 # Queries the database and runs part1
+rayshader_data <- data[order]
 p <- ggplot(data, aes(x = Budget, y = SuccessRate, size = CrewSize, colour = Status, text = Title)) + geom_point(alpha = 0.7) + labs(title = "Budget vs SuccessRate (Interactive Plotly)") + theme_minimal()
 
 # Queries the database and runs part1
 ggplotly(p, tooltip = c("text", "x", "y"))
+
+```
+
+#Tidymodels
+The Tidymodels framework is a collection of packages  for modelling and uses machine learning from tidyverse principles.
+
+```{r}
+
+# Queries the database and runs part1
+lm_spec <- linear_reg() %>% set_engine("lm")
+lm_fit <- lm_spec %>% 
+fit(SuccessRate ~ Budget + CrewSize, data = data)
+tidy(lm_fit) %>%
++ select(term, estimate, p.value)
 
 ```
