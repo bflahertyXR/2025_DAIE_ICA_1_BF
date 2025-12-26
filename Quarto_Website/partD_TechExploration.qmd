@@ -44,17 +44,17 @@ if(!require("plotly"))
   install.packages("plotly")
   library(plotly)
 
-if(!require("tidymodels"))
-  install.packages("tidymodels")
-  library(tidymodels)
+if(!require("GGally"))
+  install.packages("GGally")
+  library(GGally)
 
-if(!require("rayshader"))
-  install.packages("rayshader")
-  library(rayshader)
+if(!require("ggthemes"))
+  install.packages("ggthemes")
+  library(ggthemes)
 
-if(!require("rgl"))
-  install.packages("rgl")
-  library(rgl)
+if(!require("scales"))
+  install.packages("scales")
+  library(scales)
 
 # Connect to database
 conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
@@ -73,6 +73,8 @@ data <- dbGetQuery(conn, "SELECT Productions.ProductionID, Productions.Title, Pr
 # Queries the database and runs part1
 data <- data %>% mutate(SuccessRate = case_when(Status == "Completed" ~ 1, Status == "In Progress" ~ 0.5, TRUE ~ 0))
 
+head(data)
+
 ```
 
 #Interactive Visualisation with Plotly
@@ -88,30 +90,45 @@ ggplotly(p, tooltip = c("text", "x", "y"))
 
 ```
 
-#3D Rendering with Rayshader
-Rayshader is an open source package for producing 2D and 3D data visualizations in R. Rayshader allows users to translate ggplot2 objects into beautiful 3D data visualizations allowing for immersive visualisation concepts.
+#GGally
+Extends ggplot2 with pairwise plots and correlation and gives an overview of the relationship between variables for exploratory data analysis
 
 ```{r}
+#| label: GGally 
+#| echo: false
+#| message: true
+#| warning: true
 
-# Queries the database and runs part1
-rayshader_data <- data[order]
-p <- ggplot(data, aes(x = Budget, y = SuccessRate, size = CrewSize, colour = Status, text = Title)) + geom_point(alpha = 0.7) + labs(title = "Budget vs SuccessRate (Interactive Plotly)") + theme_minimal()
-
-# Queries the database and runs part1
-ggplotly(p, tooltip = c("text", "x", "y"))
+num_data <- data %>% select(Budget, CrewSize, SuccessRate)
+ggpairs(num_data, title = "Pairwise Relationship Between Key Variables", upper = list(continuous = wrap("cor", size = 3)), diag = list(continuous = wrap("densityDiag", alpha = 0.6)), lower = list(continuous = wrap("points", alpha = 0.6)))
 
 ```
 
-#Tidymodels
-The Tidymodels framework is a collection of packages  for modelling and uses machine learning from tidyverse principles.
+#R-Graph Gallery
+
 
 ```{r}
+#| label: R-Graph Gallery
+#| echo: false
+#| message: true
+#| warning: true
 
 # Queries the database and runs part1
-lm_spec <- linear_reg() %>% set_engine("lm")
-lm_fit <- lm_spec %>% 
-fit(SuccessRate ~ Budget + CrewSize, data = data)
-tidy(lm_fit) %>%
-+ select(term, estimate, p.value)
+ggplot(data, aes(x = CrewSize, y = SuccessRate, fill = Status)) + geom_boxplot(alpha = 0.7, colour = "grey30") + scale_fill_brewer(palette = "Set2") + labs(title = "Crew Size vs SuccessRate", x = "Crew Size", y = "Success Rate (0-1)") + theme_clean() + theme(plot.title = element_text(size = 14, face = "bold"))
+
+heat_data <- data %>% mutate(BudgetBin = cut(Budget, breaks = 10, labels = FALSE), CrewBin = cut(CrewSize, breaks = 10, labels = FALSE)) %>% group_by(BudgetBin, CrewBin) %>% summarise(AvgSuccess = mean(SuccessRate, na.rm = TRUE)) %>% ungroup()
+
+ggplot(heat_data, aes(x = BudgetBin, y = CrewBin, fill = AvgSuccess)) + geom_tile(color = "white", linewidth = 0.3) + scale_fill_gradient(low = '#56b1f7', high = '#132B43', name = "Avg Success") + labs(title = "Heatmap of Success Rate by Budget ands Crew Size", x = "Budget" , y = "Crew Size") + theme_minimal() +theme(plot.title = element_text(size = 14, face = "bold"), legend.position = "right")
 
 ```
+
+```{r}
+#| label: Disconnect from database
+#| message: true
+#| warning: true
+#| include: false
+
+dbDisconnect(conn)
+
+```
+

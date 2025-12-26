@@ -104,6 +104,9 @@ plot(model)
 par(mfrow = c(1, 1))
 ```
 
+# Discussion
+The regression model suggests that both budget and crew size have a positive association with production success. Success rates of project completion are associated by the use of larger teams and higher budgets. The budget coefficient indicates that extra budget increases the predicted success rate by
+
 ```{r}
 #| label: Disconnect from database
 #| message: true
@@ -114,5 +117,3 @@ dbDisconnect(conn)
 
 ```
 
-# Discussion
-The regression model suggests that both budget and crew size have a positive association with production success. Success rates of project completion are associated by the use of larger teams and higher budgets. The budget coefficient indicates that extra budget increases the predicted success rate by
