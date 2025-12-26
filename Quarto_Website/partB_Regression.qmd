@@ -58,7 +58,7 @@ conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
 # Select information from production, title and budget, Count the unique crew members on each and assign value to production status from the Productions table and Join with Production Crew Table and group by ID, Title, Budget and Status
 
 # Queries the database and runs part1
-data <- dbGetQuery(conn, "SELECT p.productionID, p.Title, p.Budget, COUNT(DISTINCT pc.CrewID) AS CrewSize, p.Status FROM Productions p LEFT JOIN ProductionCrew pc ON p.ProductionID = pc.ProductionID GROUP BY p.ProductionID, p.Title, p.Budget, p.Status;")
+data <- dbGetQuery(conn, "SELECT Productions.ProductionID, Productions.Title, Productions.Budget, COUNT(DISTINCT ProductionCrew.CrewID) AS CrewSize, Productions.Status FROM Productions LEFT JOIN ProductionCrew ON Productions.ProductionID = ProductionCrew.ProductionID GROUP BY Productions.ProductionID, Productions.Title, Productions.Budget, Productions.Status;")
 
 data <- data %>% mutate(SuccessRate = case_when(Status == "Completed" ~ 1, Status == "In Progress" ~ 0.5, TRUE ~ 0))
 
@@ -104,5 +104,15 @@ plot(model)
 par(mfrow = c(1, 1))
 ```
 
+```{r}
+#| label: Disconnect from database
+#| message: true
+#| warning: true
+#| include: false
+
+dbDisconnect(conn)
+
+```
+
 # Discussion
-The regression model suggests that both budget and crew size have a positive association with production success. Success Rates are influenced by the use of larger team units and higher budgets. The p-values indicate which predictors are significant.
+The regression model suggests that both budget and crew size have a positive association with production success. Success rates of project completion are associated by the use of larger teams and higher budgets. The budget coefficient indicates that extra budget increases the predicted success rate by

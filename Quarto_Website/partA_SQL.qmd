@@ -179,3 +179,14 @@ result6 <- dbGetQuery(conn, sqlconcept3)
 datatable(result6, caption = 'Productions with the above-average Budgets', options = list(pageLength = 8))
 
 ```
+
+```{r}
+#| label: Disconnect from database
+#| message: true
+#| warning: true
+#| include: false
+
+dbDisconnect(conn)
+
+```
+
