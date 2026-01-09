@@ -1,18 +1,12 @@
----
-title: "Data Analytics for Immersive Environments"
----
-
 # Welcome
 
-This Quarto website displays the first part of my individual project for **Data Analytics for Immersive Environments** for Brendan Flaherty - D00285874
+This Quarto website displays the first part of my individual project for **Data Analytics for Immersive Environments** for Brendan Flaherty - D00285874 and explores complex SQL queries from information about interactive cinematic virtual production. 
 
 It Includes:
 
 -   **Part A:** SQL Queries and Database Exploration
 -   **Part B:** Linear Regression Analysis and Visualisation
 -   **Part C:** Technology Exploration of new R Packages
-
-Each section can be accessed through the navigation bar at the top of the page
 
 :::::: {#container}
 ::: linksContainer

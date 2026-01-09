@@ -47,13 +47,11 @@ conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
 
 ```
 
-# Linear Regression Modelling
-
 ```{r}
 #| label: Part 1 DB Query
-#| echo: false
 #| message: true
 #| warning: true
+#| include: false
 
 # Selects information from production, title and budget, Count the unique crew members on each and assign value to production status from the Productions table and Join with Production Crew Table and group by ID, Title, Budget and Status
 
@@ -105,7 +103,7 @@ par(mfrow = c(1, 1))
 ```
 
 # Discussion
-The regression model suggests that both budget and crew size have a positive association with production success. Success rates of project completion are associated by the use of larger teams and higher budgets. The budget coefficient indicates that extra budget increases the predicted success rate by
+The regression model suggests that larger budgets have a slightly negative coefficient and can lead to lower success rates. The model estimates a decrease of 0.0000025. The size of the crew is associated with greater success rate but not significant and not enough evidence to support with success rate estimated to increase by 0.0662002. 
 
 ```{r}
 #| label: Disconnect from database

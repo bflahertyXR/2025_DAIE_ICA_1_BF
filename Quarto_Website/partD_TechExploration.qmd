@@ -73,8 +73,6 @@ data <- dbGetQuery(conn, "SELECT Productions.ProductionID, Productions.Title, Pr
 # Queries the database and runs part1
 data <- data %>% mutate(SuccessRate = case_when(Status == "Completed" ~ 1, Status == "In Progress" ~ 0.5, TRUE ~ 0))
 
-head(data)
-
 ```
 
 # Interactive Visualisation with Plotly
