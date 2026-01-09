@@ -4,7 +4,7 @@ title: "Data Analytics for Immersive Environments"
 
 # Welcome
 
-This Quarto website displays the first part of my individual project for **Data Analytics for Immersive Environments**
+This Quarto website displays the first part of my individual project for **Data Analytics for Immersive Environments** for Brendan Flaherty - D00285874
 
 It Includes:
 
@@ -17,19 +17,19 @@ Each section can be accessed through the navigation bar at the top of the page
 :::::: {#container}
 ::: linksContainer
 <a href="/partA_SQL.html">
-<button type = "button" class="btn btn-outline-light">SQL</button>
+<button type = "button" class="btn btn_quarto">SQL</button>
 </a>
 :::
 
 ::: linksContainer
 <a href="/partB_Regression.html">
-<button type = "button" class="btn btn-outline-light">Linear Regression</button>
+<button type = "button" class="btn btn_quarto">Linear Regression</button>
 </a>
 :::
 
 ::: linksContainer
 <a href="/partD_TechExploration.html">
-<button type = "button" class="btn btn-outline-light">Technology Exploration</button>
+<button type = "button" class="btn btn_quarto">Technology Exploration</button>
 </a>
 :::
 ::::::

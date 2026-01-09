@@ -6,8 +6,8 @@ For this section, I have explored the creative use of R packages to visualise da
 It Includes:
 
 -   **Plotly:** Interactive Visualisation
--   **Rayshader:** 3D Rendering
--   **Tidymodels:** Using Machine Learning
+-   **GGally:** Explores relationship between variables
+-   **R-Graph Gallery:** Extends the tidyverse and ggplot2 libraries
 
 ```{r}
 #| label: Install and Load Libraries
@@ -62,10 +62,10 @@ conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
 ```
 
 ```{r}
-#| label: Run Query 
+#| label: Run Query
+#| echo: false
 #| message: true
 #| warning: true
-#| include: false
 
 # Queries the database and runs part1
 data <- dbGetQuery(conn, "SELECT Productions.ProductionID, Productions.Title, Productions.Budget, COUNT(DISTINCT ProductionCrew.CrewID) AS CrewSize, Productions.Status FROM Productions LEFT JOIN ProductionCrew ON Productions.ProductionID = ProductionCrew.ProductionID GROUP BY Productions.ProductionID, Productions.Title, Productions.Budget, Productions.Status;")
@@ -77,10 +77,14 @@ head(data)
 
 ```
 
-#Interactive Visualisation with Plotly
+# Interactive Visualisation with Plotly
 The Plotly library allows for interactive exploration and users can see dynamic overview of budget and Success Rate
 
 ```{r}
+#| label: Plotly
+#| echo: false
+#| message: true
+#| warning: true
 
 # Queries the database and runs part1
 p <- ggplot(data, aes(x = Budget, y = SuccessRate, size = CrewSize, colour = Status, text = Title)) + geom_point(alpha = 0.7) + labs(title = "Budget vs Success Rate") + theme_minimal()
@@ -90,11 +94,11 @@ ggplotly(p, tooltip = c("text", "x", "y"))
 
 ```
 
-#GGally
+# GGally
 Extends ggplot2 with pairwise plots and correlation and gives an overview of the relationship between variables for exploratory data analysis
 
 ```{r}
-#| label: GGally 
+#| label: GGally
 #| echo: false
 #| message: true
 #| warning: true
@@ -104,8 +108,8 @@ ggpairs(num_data, title = "Pairwise Relationship Between Key Variables", upper =
 
 ```
 
-#R-Graph Gallery
-
+# R-Graph Gallery
+Extends the tidyverse and ggplot2 libraries
 
 ```{r}
 #| label: R-Graph Gallery

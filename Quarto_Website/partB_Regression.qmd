@@ -5,8 +5,8 @@ format: html
 
 ```{r}
 #| label: Install and Load Libraries
-#| message: false
-#| warning: false
+#| message: true
+#| warning: true
 #| include: false
 
 # Install packages, load libraries
@@ -51,11 +51,11 @@ conn <- dbConnect(RSQLite::SQLite(), "virtual_production.db")
 
 ```{r}
 #| label: Part 1 DB Query
+#| echo: false
 #| message: true
 #| warning: true
-#| include: false
 
-# Select information from production, title and budget, Count the unique crew members on each and assign value to production status from the Productions table and Join with Production Crew Table and group by ID, Title, Budget and Status
+# Selects information from production, title and budget, Count the unique crew members on each and assign value to production status from the Productions table and Join with Production Crew Table and group by ID, Title, Budget and Status
 
 # Queries the database and runs part1
 data <- dbGetQuery(conn, "SELECT Productions.ProductionID, Productions.Title, Productions.Budget, COUNT(DISTINCT ProductionCrew.CrewID) AS CrewSize, Productions.Status FROM Productions LEFT JOIN ProductionCrew ON Productions.ProductionID = ProductionCrew.ProductionID GROUP BY Productions.ProductionID, Productions.Title, Productions.Budget, Productions.Status;")
